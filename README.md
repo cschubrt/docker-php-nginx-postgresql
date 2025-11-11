@@ -1,5 +1,4 @@
-# docker-php (PHP 8.3 + Nginx + PostgreSQL)
-# docker-php (PHP 8.3 + Nginx + PostgreSQL)
+# docker-php (PHP 8.3 + Nginx + PostgreSQL) [![CI](https://github.com/cschubrt/docker-php-nginx-postgresql/actions/workflows/ci.yml/badge.svg)](https://github.com/cschubrt/docker-php-nginx-postgresql/actions/workflows/ci.yml)
 
 This workspace contains a minimal Docker-based setup to run a PHP 8.3 application with Nginx and PostgreSQL.
 
