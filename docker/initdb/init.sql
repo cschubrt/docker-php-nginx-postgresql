@@ -4,3 +4,10 @@ CREATE TABLE IF NOT EXISTS public.users (
   name text NOT NULL,
   email text UNIQUE NOT NULL
 );
+
+-- Seed some example users
+INSERT INTO public.users (name, email)
+  VALUES
+    ('Alice Example', 'alice@example.com'),
+    ('Bob Example', 'bob@example.com')
+  ON CONFLICT DO NOTHING;

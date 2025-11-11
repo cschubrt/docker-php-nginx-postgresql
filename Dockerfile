@@ -18,12 +18,24 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
+
 # Copy application files as a fallback (compose will bind-mount in dev)
 COPY . /var/www/html
+
+# Copy entrypoint script into the image and make it executable
+COPY docker/entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# If the project includes a composer.json, install PHP dependencies during build.
+# This is conditional so the build won't fail if there is no composer.json in the repo.
+RUN if [ -f /var/www/html/composer.json ]; then \
+            composer install --no-interaction --prefer-dist --optimize-autoloader; \
+        fi
 
 # Ensure proper permissions for www-data
 RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 9000
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["php-fpm"]
