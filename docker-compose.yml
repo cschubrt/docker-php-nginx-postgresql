@@ -7,6 +7,8 @@ services:
     volumes:
       - ./:/var/www/html
       - ./php.ini:/usr/local/etc/php/php.ini:ro
+    env_file:
+      - .env
     environment:
       - COMPOSER_ALLOW_SUPERUSER=1
     depends_on:
@@ -24,10 +26,12 @@ services:
 
   db:
     image: postgres:15
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: appdb
-      POSTGRES_USER: appuser
-      POSTGRES_PASSWORD: secret
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:

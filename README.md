@@ -57,6 +57,38 @@ open an interactive psql session inside the db container
 docker compose exec db psql -U appuser -d appdb
 ```
 
+open an interactive shell session inside the container
+```powershell
+docker compose exec app bash
+
+# Start a new bash session (doesn't require running service)
+docker compose run --rm app bash
+
+# list files in app container
+docker compose exec app ls -la /var/www/html
+
+# check PHP version in app
+docker compose exec app php -v
+
+# run Composer in app
+docker compose exec app composer install
+```
+
+Inside app container:
+cd /var/www/html          # Go to project root
+ls -la                    # List files
+php -v                    # Check PHP version
+composer install          # Install dependencies
+vendor/bin/phpunit        # Run tests
+tail -f /var/log/nginx/access.log   # View Nginx logs (if you exec into web)
+tail -f /var/log/php-fpm/error.log
+
+Inside db container:
+psql -U appuser -d appdb  # Already in psql, but can reconnect
+\dt                       # List tables
+SELECT * FROM users;      # Run SQL query
+\q                        # Exit psql
+
 Notes and recommendations
 
 - The `Dockerfile` is development-oriented and mounts the project directory so changes are reflected immediately.
