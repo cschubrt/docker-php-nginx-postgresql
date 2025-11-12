@@ -1,4 +1,5 @@
-# docker-php (PHP 8.3 + Nginx + PostgreSQL) [![CI](https://github.com/cschubrt/docker-php-nginx-postgresql/actions/workflows/ci.yml/badge.svg)](https://github.com/cschubrt/docker-php-nginx-postgresql/actions/workflows/ci.yml)
+# docker-php (PHP 8.3 + Nginx + PostgreSQL)
+[![CI](https://github.com/cschubrt/docker-php-nginx-postgresql/actions/workflows/ci.yml/badge.svg)](https://github.com/cschubrt/docker-php-nginx-postgresql/actions/workflows/ci.yml)
 
 This workspace contains a minimal Docker-based setup to run a PHP 8.3 application with Nginx and PostgreSQL.
 
@@ -94,3 +95,7 @@ Notes and recommendations
 - The `Dockerfile` is development-oriented and mounts the project directory so changes are reflected immediately.
 - Use `Dockerfile.prod` to build production images (it installs only production deps and caches Composer layers).
 - For production, harden credentials, disable display_errors, and tune PHP-FPM/Nginx.
+
+License
+
+This project is available under a license: Apache-2.0. See `LICENSE-APACHE-2.0` for the full text.
