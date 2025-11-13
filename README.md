@@ -3,17 +3,6 @@
 
 This workspace contains a minimal Docker-based setup to run a PHP 8.3 application with Nginx and PostgreSQL.
 
-Files included:
-- `Dockerfile` — PHP 8.3 FPM image with pdo_pgsql and composer (development-friendly)
-- `Dockerfile.prod` — production-optimized multi-stage image that caches Composer deps
-- `docker-compose.yml` — app, web, db services
-- `docker/nginx/default.conf` — Nginx config forwarding PHP to php-fpm
-- `php.ini` — basic dev PHP config
-- `docker/initdb/init.sql` — sample DB init script
-- `.dockerignore` — excludes vendor/node_modules/.git from context
-- `composer.json` — project file (adds phpunit/phpunit as dev dependency)
-- `src/` and `tests/` — sample Database class and PHPUnit test
-
 Quick start (PowerShell):
 
 ```powershell
@@ -61,34 +50,27 @@ docker compose exec db psql -U appuser -d appdb
 open an interactive shell session inside the container
 ```powershell
 docker compose exec app bash
-
-# Start a new bash session (doesn't require running service)
-docker compose run --rm app bash
-
-# list files in app container
-docker compose exec app ls -la /var/www/html
-
-# check PHP version in app
-docker compose exec app php -v
-
-# run Composer in app
-docker compose exec app composer install
 ```
 
-Inside app container:
-cd /var/www/html          # Go to project root
-ls -la                    # List files
-php -v                    # Check PHP version
-composer install          # Install dependencies
-vendor/bin/phpunit        # Run tests
-tail -f /var/log/nginx/access.log   # View Nginx logs (if you exec into web)
-tail -f /var/log/php-fpm/error.log
+Start a new bash session (following doesn't require running service)
+```powershell
+docker compose run --rm app bash
+```
 
-Inside db container:
-psql -U appuser -d appdb  # Already in psql, but can reconnect
-\dt                       # List tables
-SELECT * FROM users;      # Run SQL query
-\q                        # Exit psql
+list files in app container
+```powershell
+docker compose exec app ls -la /var/www/html
+```
+
+check PHP version in app
+```powershell
+docker compose exec app php -v
+```
+
+# run Composer in app
+```powershell
+docker compose exec app composer install
+```
 
 Notes and recommendations
 
