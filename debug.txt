@@ -1,0 +1,105 @@
+PRODUCTION
+========================
+
+Step 1: Clean up and build the production image
+-----------------------------------------------
+docker compose down
+docker compose build create-prodm
+
+
+Step 2: Start the full production stack
+----------------------------------------
+docker compose up create-prodm db-prodm web-prod
+
+You should see logs from all three services.
+Wait for db-prodm to be ready (look for "database system is ready to accept connections").
+
+
+Step 3: Access the production app (in another terminal)
+-------------------------------------------------------
+Open your browser to:
+http://localhost:8081
+
+You should see the users page with Alice and Bob listed.
+
+
+Step 4: Verify database connectivity
+-------------------------------------
+docker compose exec db-prodm psql -U appuser -d appdb
+
+Inside psql, run:
+SELECT * FROM users;
+
+Exit psql:
+\q
+
+
+Step 5: Test PHP in the production container
+---------------------------------------------
+Check PHP version:
+docker compose exec create-prodm php -v
+
+Test autoloader works:
+docker compose exec create-prodm php -r "require 'vendor/autoload.php'; echo 'Autoload OK';"
+
+Test DB connection from PHP:
+docker compose exec create-prodm php -r "require 'vendor/autoload.php'; $pdo = \App\Database::getPdo(); var_dump($pdo);"
+
+
+Step 6: Run PHPUnit tests in production
+----------------------------------------
+docker compose exec create-prodm vendor/bin/phpunit --colors=always
+
+
+Step 7: Check logs
+------------------
+View production app logs:
+docker compose logs create-prodm
+
+View production web (Nginx) logs:
+docker compose logs web-prod
+
+View production database logs:
+docker compose logs db-prodm
+
+Follow logs in real-time (useful for debugging):
+docker compose logs -f web-prod
+
+
+Step 8: Cleanup
+---------------
+docker compose down
+
+Remove the persistent production data volume (if you want a db):
+docker volume rm docker-php_db-data-prodm
+
+
+IMPORTANT NOTES
+===============
+- Production uses Dockerfile.prod (not Dockerfile), which installs only production dependencies
+- Source code is baked into the image during build, not mounted
+- Both dev (port 8080) and production (port 8081) can run simultaneously
+- Production database is persistent; data survives container restarts
+
+
+TROUBLESHOOTING
+===============
+If you see "Database not available" message:
+1. Wait 10 seconds for db-prodm to fully start
+2. Verify credentials in .env.prod match docker-compose.yml
+3. Check logs: docker compose logs db-prodm
+
+If Nginx returns 502 Bad Gateway:
+1. Check PHP-FPM is running: docker compose logs create-prodm
+2. Verify service name in Nginx config: grep "fastcgi_pass" docker/nginx/default.conf.prod
+3. Ensure Nginx can reach create-prodm: docker compose exec web-prod ping create-prodm
+
+If browser shows blank page:
+1. Clear browser cache (Ctrl+F5 for hard refresh)
+2. Open DevTools (F12) to check for errors
+3. Check Nginx logs: docker compose logs web-prod
+
+If autoload.php not found:
+1. Verify Composer ran during build: docker compose logs create-prodm | grep composer
+2. Check if vendor exists: docker compose exec create-prodm ls -la vendor/
+3. Rebuild image: docker compose build --no-cache create-prodm
