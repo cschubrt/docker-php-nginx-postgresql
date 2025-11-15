@@ -4,16 +4,36 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\Database;
-
 $pdo = Database::getPdo();
-?><!doctype html>
+?>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Users</title>
-  <style>body{font-family:Arial,Helvetica,sans-serif;margin:20px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:8px}th{background:#f4f4f4}</style>
+  
+  <style>
+  body{
+    font-family:Arial,Helvetica,sans-serif;
+    margin:20px
+    }
+    
+    table{
+        border-collapse:collapse;
+        width:100%
+        }
+        
+        th,td{
+            border:1px solid #ddd;padding:8px
+            }
+            th{
+                background:#f4f4f4
+                }
+                </style>
+
 </head>
+
 <body>
   <h1>Users</h1>
 <?php
