@@ -8,7 +8,8 @@ class DatabaseTest extends TestCase
 {
     public function testCanGetPdoOrSkip()
     {
-        $pdo = Database::getPdo();
+        $database = new Database();
+        $pdo = $database->isConnected();
         if ($pdo === null) {
             $this->markTestSkipped('Postgres not available with provided environment variables.');
         }

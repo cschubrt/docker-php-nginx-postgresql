@@ -31,10 +31,6 @@ docker compose up --build -d
 # Stop and remove containers (and network):
 docker compose down
 ```
-
-Local dev web address
-- http://localhost:8080
-
 Example page
 - The project includes a simple example at `public/index.php` that lists rows from the `users` table (seeded by `docker/initdb/init.sql`).
 

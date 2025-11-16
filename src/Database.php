@@ -1,35 +1,57 @@
 <?php
+
 namespace App;
 
 class Database
 {
+    private $pdo;
+
     /**
      * Try to create and return a PDO connection to PostgreSQL.
      * Returns null if connection fails.
-     *
-     * Environment variables used (fallbacks included):
-     *  POSTGRES_HOST / DB_HOST (default: db)
-     *  POSTGRES_PORT / DB_PORT (default: 5432)
-     *  POSTGRES_DB / DB (default: appdb)
-     *  POSTGRES_USER (default: appuser)
-     *  POSTGRES_PASSWORD (default: secret)
      */
-    public static function getPdo(): ?\PDO
+    public function __construct()
+    {
+        $dsn  = $this->getDsn();
+        $user = getenv('POSTGRES_USER') ?: getenv('POSTGRES_USER') ?: 'appuser';
+        $pass = getenv('POSTGRES_PASSWORD') ?: getenv('POSTGRES_PASSWORD') ?: 'apppassword';
+
+        try {
+            $this->pdo = new \PDO($dsn, $user, $pass, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+            return $this->pdo;
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    public function getDsn(): string
     {
         $host = getenv('POSTGRES_HOST') ?: getenv('DB_HOST') ?: 'db';
         $port = getenv('POSTGRES_PORT') ?: getenv('DB_PORT') ?: '5432';
         $db   = getenv('POSTGRES_DB') ?: getenv('DB') ?: 'appdb';
-        $user = getenv('POSTGRES_USER') ?: 'appuser';
-        $pass = getenv('POSTGRES_PASSWORD') ?: 'secret';
 
-        $dsn = "pgsql:host={$host};port={$port};dbname={$db}";
-
-        try {
-            $pdo = new \PDO($dsn, $user, $pass, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-            return $pdo;
-        } catch (\Throwable $e) {
-            // Return null when DB is not reachable; tests can skip in that case.
-            return null;
-        }
+        return "pgsql:host={$host};port={$port};dbname={$db}";
     }
+
+    public function isConnected(): \PDO
+    {
+        $pdo = $this->pdo;
+        if ($pdo === null) {
+            throw new \RuntimeException('Could not connect to the database.');
+        }
+        return $pdo;
+    }
+
+    public function getResults($query): array
+    {
+        $pdo = $this->isConnected();
+        try {
+            $stmt = $pdo->prepare($query);
+            $stmt->execute();
+        } catch (\PDOException $e) {
+            throw new \RuntimeException('Database query error: ' . $e->getMessage());
+        }
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
 }
