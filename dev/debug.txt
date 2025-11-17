@@ -46,6 +46,11 @@ Test DB connection from PHP:
 docker compose exec create-prodm php -r "require 'vendor/autoload.php'; $pdo = \App\Database::getPdo(); var_dump($pdo);"
 
 
+-------------------
+docker compose build --no-cache create-prodm web-prod
+docker compose up -d create-prodm web-prod db-prodm
+-------------------
+
 Step 6: Run PHPUnit tests in production
 ----------------------------------------
 docker compose exec create-prodm vendor/bin/phpunit --colors=always

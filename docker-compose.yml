@@ -19,7 +19,6 @@ services:
       context: .
       dockerfile: Dockerfile.prod
     image: docker-php-app:prod
-    # production image should not bind-mount source; it uses files baked into the image
     env_file:
       - .env
     environment:
