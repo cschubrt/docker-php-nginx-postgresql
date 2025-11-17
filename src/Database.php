@@ -14,7 +14,7 @@ class Database
     {
         $dsn  = $this->getDsn();
         $user = getenv('POSTGRES_USER') ?: getenv('POSTGRES_USER') ?: 'appuser';
-        $pass = getenv('POSTGRES_PASSWORD') ?: getenv('POSTGRES_PASSWORD') ?: 'apppassword';
+        $pass = getenv('POSTGRES_PASSWORD') ?: getenv('POSTGRES_PASSWORD') ?: 'secret';
 
         try {
             $this->pdo = new \PDO($dsn, $user, $pass, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
@@ -26,7 +26,7 @@ class Database
 
     public function getDsn(): string
     {
-        $host = getenv('POSTGRES_HOST') ?: getenv('DB_HOST') ?: 'db';
+        $host = getenv('POSTGRES_HOST') ?: getenv('DB_HOST') ?: 'db-prodm';
         $port = getenv('POSTGRES_PORT') ?: getenv('DB_PORT') ?: '5432';
         $db   = getenv('POSTGRES_DB') ?: getenv('DB') ?: 'appdb';
 

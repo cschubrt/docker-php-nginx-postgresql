@@ -1,43 +1,29 @@
-# Production-optimized Dockerfile (multi-stage)
-# Uses layer caching for Composer dependencies by copying composer.json first.
+# Dockerfile.prod
 FROM php:8.3-fpm AS base
 
-# Install system dependencies and PHP extensions
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        libpq-dev \
-        libzip-dev \
-        zip \
-        unzip \
-        git \
-        curl \
+# Install dependencies...
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev libzip-dev zip unzip git curl \
     && docker-php-ext-install pdo_pgsql zip \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www/html
 
-# Copy Composer binary
+# Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy composer files first to leverage Docker cache
-COPY composer.json composer.lock* /var/www/html/
+# Copy composer files + install dependencies (cached layer)
+COPY composer.json composer.lock* ./
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
-# Install PHP dependencies (production, no dev)
-RUN if [ -f /var/www/html/composer.json ]; then \
-      composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader; \
-    fi
+# NOW copy the entire application source code
+COPY . /var/www/html/
 
-# Copy application files
-COPY . /var/www/html
+# Run any post-copy composer scripts if needed
+RUN composer dump-autoload --optimize
 
-# Generate optimized autoloader if composer.json exists
-RUN if [ -f /var/www/html/composer.json ]; then \
-      composer dump-autoload --optimize; \
-    fi
-
-# Permissions
+# Fix permissions
 RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 9000
-
 CMD ["php-fpm"]
