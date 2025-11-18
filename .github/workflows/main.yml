@@ -6,7 +6,7 @@ on:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: cschubrt/docker-php
+  IMAGE_NAME: craigschubert/docker-php
 
 jobs:
   build-and-push:
