@@ -8,6 +8,7 @@ body {
   background-color: #efeff1;
 }
 
+/* Grid Layout */
 #container {
   font-family: Arial, sans-serif;
   display: grid;
@@ -26,13 +27,6 @@ main {
   background-color: #ecf0f1;
   padding: 40px;
   overflow-y: auto;
-}
-
-#right-sidebar {
-  grid-area: right-sidebar;
-  background-color: #2c3e50;
-  padding: 20px;
-  color: white;
 }
 
 header {
@@ -61,6 +55,7 @@ h1 {
   border-bottom: 1px solid #555657;
 }
 
+/* User List Styles */
 #user-list {
   list-style: none;
   padding-left: 10px;

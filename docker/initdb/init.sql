@@ -1,4 +1,4 @@
--- create a sample users table
+-- example users table
 CREATE TABLE IF NOT EXISTS public.users (
   id serial PRIMARY KEY,
   name text NOT NULL,
