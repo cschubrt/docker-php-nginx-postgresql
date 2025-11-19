@@ -1,23 +1,14 @@
 # docker-php (PHP 8.3 + Nginx + PostgreSQL)
 
-## Status
+[![CI](https://github.com/cschubrt/docker-php-nginx-postgresql/actions/workflows/ci.yml/badge.svg)](https://github.com/cschubrt/docker-php-nginx-postgresql/actions/workflows/ci.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![PHP 8.3](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)](https://www.php.net/)
+[![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](https://docs.docker.com/compose/)
+[![PostgreSQL 15](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Nginx](https://img.shields.io/badge/Nginx-stable-009639?logo=nginx&logoColor=white)](https://nginx.org/)
 
-| | |
-|---|---|
-| [![CI](https://github.com/cschubrt/docker-php-nginx-postgresql/actions/workflows/ci.yml/badge.svg)](https://github.com/cschubrt/docker-php-nginx-postgresql/actions/workflows/ci.yml) | CI/CD Pipeline |
-| [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) | Apache 2.0 License |
-
-## Tech Stack
-
-| | |
-|---|---|
-| [![PHP 8.3](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)](https://www.php.net/) | PHP Version |
-| [![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](https://docs.docker.com/compose/) | Orchestration |
-| [![PostgreSQL 15](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/) | Database |
-| [![Nginx](https://img.shields.io/badge/Nginx-stable-009639?logo=nginx&logoColor=white)](https://nginx.org/) | Web Server |
-
-
-This workspace contains a minimal Docker-based setup to run a PHP 8.3 application with Nginx and PostgreSQL.
+This workspace contains a Docker-based setup to run a PHP 8.3 application with Nginx and PostgreSQL.
+When commits are pushed to the main branch, CI/CD builds and pushes both development and production images to Docker Hub: [craigschubert/docker-php](https://hub.docker.com/repository/docker/craigschubert/docker-php)
 
 Quick start (PowerShell):
 
@@ -31,9 +22,6 @@ docker compose up --build -d
 # Stop and remove containers (and network):
 docker compose down
 ```
-Example page
-- The project includes a simple example at `public/index.php` that lists rows from the `users` table (seeded by `docker/initdb/init.sql`).
-
 
 PostgreSQL defaults (see `docker-compose.yml`):
 - DB: `appdb`
