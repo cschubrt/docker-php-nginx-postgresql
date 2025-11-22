@@ -27,27 +27,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract metadata (dev)
-        id: meta-dev
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch,suffix=-dev
-            type=sha,suffix=-dev
-            type=raw,value=dev
-
-      - name: Build and push dev image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: ${{ steps.meta-dev.outputs.tags }}
-          labels: ${{ steps.meta-dev.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
       - name: Extract metadata (prod)
         id: meta-prod
         uses: docker/metadata-action@v5
@@ -59,21 +38,26 @@ jobs:
             type=raw,value=prod
             type=raw,value=latest
 
+      - name: Set short SHA tag
+        id: set-short-sha
+        run: |
+          SHORT_SHA="$(echo "${GITHUB_SHA}" | cut -c1-7)"
+          SHORT_SHA_TAG="${SHORT_SHA}-prod"
+          echo "short_sha_tag=$SHORT_SHA_TAG" >> $GITHUB_OUTPUT
+
       - name: Build and push prod image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile.prod
           push: true
-          tags: ${{ steps.meta-prod.outputs.tags }}
+          tags: |
+            ${{ steps.meta-prod.outputs.tags }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.set-short-sha.outputs.short_sha_tag }}
           labels: ${{ steps.meta-prod.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Image digest (dev)
-        run: |
-          echo "Dev image pushed with digest: ${{ steps.meta-dev.outputs.digest }}"
-
       - name: Image digest (prod)
         run: |
-          echo "Prod image pushed with digest: ${{ steps.meta-prod.outputs.digest }}"
+          echo "Prod image tags: ${{ steps.meta-prod.outputs.tags }}"
